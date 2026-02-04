@@ -3,144 +3,228 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gerador de QR Code para PDF</title>
+    <title>Gerador de QR Code</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <style>
+      :root {
+        --bg-dark: #0f172a;
+        --card-dark: #1e293b;
+        --accent: #3b82f6;
+        --text-main: #f8fafc;
+        --text-dim: #94a3b8;
+      }
       * {
         box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
+        font-family: "Inter", "Segoe UI", sans-serif;
       }
-
       body {
-        background-color: #f8fafc;
+        background-color: var(--bg-dark);
+        background-image: radial-gradient(
+          circle at 2px 2px,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 0
+        );
+        background-size: 32px 32px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--text-main);
+      }
+      .main-content {
+        flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        margin: 0;
+        padding: 100px 20px;
       }
-
       .container {
-        background: white;
+        background: var(--card-dark);
         padding: 2.5rem;
-        border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        border-radius: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         text-align: center;
         width: 100%;
-        max-width: 400px;
+        max-width: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 2;
       }
-
       h1 {
-        color: #1e293b;
+        font-size: 1.8rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         margin-bottom: 1.5rem;
-        font-size: 1.5rem;
       }
-
       input {
         width: 100%;
-        padding: 14px;
-        margin-bottom: 1rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 10px;
+        padding: 16px;
+        background: #0f172a;
+        border: 2px solid #334155;
+        border-radius: 14px;
+        color: white;
         font-size: 1rem;
-        outline: none;
-        transition: border-color 0.2s;
+        transition: all 0.3s;
       }
-
       input:focus {
-        border-color: #3b82f6;
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
       }
-
       button {
         width: 100%;
-        padding: 14px;
+        padding: 16px;
         border: none;
-        border-radius: 10px;
+        border-radius: 14px;
         font-size: 1rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
-        transition:
-          transform 0.1s,
-          opacity 0.2s;
-        margin-bottom: 10px;
+        transition: 0.3s;
+        margin-top: 15px;
       }
-
-      button:active {
-        transform: scale(0.98);
-      }
-
-      .btn-generate {
-        background-color: #3b82f6;
+      .btn-gen {
+        background: var(--accent);
         color: white;
       }
-
+      .btn-gen:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+      }
       .btn-pdf {
-        background-color: #10b981;
+        background: #334155;
         color: white;
-        display: none; /* Escondido até gerar o QR */
+        display: none;
+        margin-top: 10px;
       }
-
       #qrcode {
         margin: 2rem 0;
         display: flex;
         justify-content: center;
       }
-
       #qrcode img {
-        border: 10px solid white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        background: white;
+        border-radius: 12px;
       }
-
-      .footer-text {
+      footer {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 40px 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        width: 100%;
+        margin-top: auto;
+      }
+      .footer-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .dev-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 20px;
+      }
+      .social-icons {
+        display: flex;
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+      .icon-box {
+        text-decoration: none;
+        color: var(--text-dim);
+        font-size: 1.5rem;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .icon-box:hover {
+        color: var(--accent);
+        transform: scale(1.1);
+      }
+      .icon-box span {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .footer-bottom {
         font-size: 0.8rem;
-        color: #94a3b8;
-        margin-top: 1rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+      }
+      .watermark {
+        position: fixed;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-10deg);
+        font-size: 12vw;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.02);
+        pointer-events: none;
+        z-index: 1;
+        text-transform: uppercase;
+      }
+      @media (max-width: 480px) {
+        .social-icons {
+          flex-direction: column;
+          gap: 15px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Gerador de QR Code</h1>
-
-      <input
-        type="url"
-        id="urlInput"
-        placeholder="Cole seu link aqui..."
-        autocomplete="off"
-      />
-
-      <button class="btn-generate" onclick="generateQR()">Gerar QR Code</button>
-
-      <div id="qrcode"></div>
-
-      <button id="pdfBtn" class="btn-pdf" onclick="downloadPDF()">
-        Salvar em PDF
-      </button>
-
-      <p class="footer-text">
-        O PDF será gerado em tamanho A4 com o código centralizado.
-      </p>
+    <div class="watermark">BORIZY</div>
+    <div class="main-content">
+      <div class="container">
+        <h1>Gere seu qrcode</h1>
+        <input type="url" id="urlInput" placeholder="coloque o link aqui" />
+        <button class="btn-gen" onclick="generateQR()">Gerar QR Code</button>
+        <div id="qrcode"></div>
+        <button id="pdfBtn" class="btn-pdf" onclick="downloadPDF()">
+          <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+        </button>
+      </div>
     </div>
-
+    <footer>
+      <div class="footer-wrapper">
+        <div class="dev-name">Feito por Rafael (Borizy)</div>
+        <div class="social-icons">
+          <a
+            href="https://www.instagram.com/rafaa_sousxx/"
+            target="_blank"
+            class="icon-box"
+          >
+            <i class="fa-brands fa-instagram"></i>
+            <span>Instagram</span>
+          </a>
+          <a
+            href="https://wa.me/5534999936104"
+            target="_blank"
+            class="icon-box"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+        <div class="footer-bottom">EST. 2026 | UBERLÂNDIA - MG</div>
+      </div>
+    </footer>
     <script>
       const urlInput = document.getElementById("urlInput");
       const qrcodeContainer = document.getElementById("qrcode");
       const pdfBtn = document.getElementById("pdfBtn");
-
       function generateQR() {
         const url = urlInput.value.trim();
-
-        if (!url) {
-          alert("Por favor, insira um link válido.");
-          return;
-        }
-
-        // Limpa QR anterior
+        if (!url) return alert("Insira um link!");
         qrcodeContainer.innerHTML = "";
-
-        // Cria o novo QR Code
         new QRCode(qrcodeContainer, {
           text: url,
           width: 256,
@@ -149,50 +233,32 @@
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.H,
         });
-
-        // Mostra o botão de PDF após o render
         setTimeout(() => {
           pdfBtn.style.display = "block";
         }, 200);
       }
-
       function downloadPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-
-        // Tenta capturar a imagem gerada (QRCode.js gera uma <img> ou <canvas>)
         const qrImg = qrcodeContainer.querySelector("img");
-        const qrCanvas = qrcodeContainer.querySelector("canvas");
-
-        // Obtém o DataURL da imagem
-        const imgData = qrImg ? qrImg.src : qrCanvas.toDataURL("image/png");
-
-        if (!imgData) {
-          alert("Erro ao capturar imagem do QR Code.");
-          return;
-        }
-
-        // Título no PDF
+        if (!qrImg) return;
+        const url = urlInput.value.trim();
+        doc.setFillColor(15, 23, 42);
+        doc.rect(0, 0, 210, 297, "F");
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
-        doc.text("QR CODE GERADO", 105, 40, { align: "center" });
-
-        // Desenha o QR Code centralizado (A4 tem 210mm de largura)
-        // x=55, y=60, largura=100, altura=100
-        doc.addImage(imgData, "PNG", 55, 60, 100, 100);
-
-        // Adiciona o link abaixo para conferência
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        doc.setTextColor(100);
-        const linkText =
-          urlInput.value.length > 50
-            ? urlInput.value.substring(0, 50) + "..."
-            : urlInput.value;
-        doc.text(linkText, 105, 170, { align: "center" });
-
-        // Nome do arquivo baseado no link (opcional)
-        doc.save("meu-qrcode.pdf");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(26);
+        doc.text("QR CODE", 105, 45, { align: "center" });
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(50, 65, 110, 110, 5, 5, "F");
+        doc.addImage(qrImg.src, "PNG", 55, 70, 100, 100);
+        doc.setFontSize(10);
+        doc.setTextColor(148, 163, 184);
+        doc.text("Link: " + url.substring(0, 60), 105, 190, {
+          align: "center",
+        });
+        doc.text("QRcode gerado", 105, 200, { align: "center" });
+        doc.save("QR_code.pdf");
       }
     </script>
   </body>
